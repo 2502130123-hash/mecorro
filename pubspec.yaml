@@ -1,0 +1,36 @@
+name: mecorro
+description: "mecorro - App deportiva para contar pasos, distancia, velocidad y calorías."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  # Conserva la línea "sdk:" que generó Android Studio si es diferente.
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # Persistencia local y seguridad (mismas que tus proyectos anteriores)
+  shared_preferences: ^2.5.6
+  crypto: ^3.0.8
+  local_auth: ^3.0.2
+  local_auth_android: ^2.3.0
+
+  # Sensores, GPS, permisos y mapa
+  sensors_plus: ^7.0.0        # acelerómetro + giroscopio
+  pedometer: ^4.1.1           # podómetro (STEP_COUNTER)
+  geolocator: ^14.0.2         # GPS
+  permission_handler: ^12.0.1 # permisos en tiempo de ejecución
+  flutter_map: ^8.2.2         # mapa (OpenStreetMap, sin API key)
+  latlong2: ^0.9.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
