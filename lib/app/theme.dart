@@ -37,7 +37,7 @@ class AppTheme {
     final base = ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: AppColors.white,
+      scaffoldBackgroundColor: AppColors.navy,
     );
     return base.copyWith(
       textTheme: base.textTheme.apply(
@@ -48,7 +48,7 @@ class AppTheme {
   }
 }
 
-/// Estilos reutilizables (campos de texto y botones).
+/// Estilos reutilizables (campos de texto y botones) con aspecto retro.
 class AppDecor {
   AppDecor._();
 
@@ -59,8 +59,8 @@ class AppDecor {
     String? hint,
     String? suffixText,
   }) {
-    OutlineInputBorder border(Color color, [double width = 1]) => OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
+    OutlineInputBorder border(Color color, [double width = 1.2]) => OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(color: color, width: width),
     );
     return InputDecoration(
@@ -70,14 +70,14 @@ class AppDecor {
       prefixIcon: icon == null ? null : Icon(icon, color: AppColors.slate),
       suffixIcon: suffix,
       filled: true,
-      fillColor: AppColors.card,
+      fillColor: AppColors.white,
       labelStyle: const TextStyle(color: AppColors.slate),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      border: border(Colors.transparent),
-      enabledBorder: border(Colors.transparent),
-      focusedBorder: border(AppColors.orange, 1.6),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+      border: border(AppColors.silver),
+      enabledBorder: border(AppColors.silver),
+      focusedBorder: border(AppColors.orange, 2),
       errorBorder: border(AppColors.danger),
-      focusedErrorBorder: border(AppColors.danger, 1.6),
+      focusedErrorBorder: border(AppColors.danger, 2),
     );
   }
 
@@ -86,19 +86,28 @@ class AppDecor {
       backgroundColor: color,
       foregroundColor: AppColors.white,
       minimumSize: const Size.fromHeight(54),
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+      elevation: 3,
+      shadowColor: AppColors.navy,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(color: AppColors.navy.withValues(alpha: 0.55), width: 1.4),
+      ),
+      textStyle: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 0.8,
+      ),
     );
   }
 
   static ButtonStyle outlineButton() {
     return OutlinedButton.styleFrom(
       foregroundColor: AppColors.navy,
+      backgroundColor: AppColors.white,
       minimumSize: const Size.fromHeight(54),
-      side: const BorderSide(color: AppColors.slate, width: 1.2),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+      side: const BorderSide(color: AppColors.slate, width: 1.4),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      textStyle: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700),
     );
   }
 }

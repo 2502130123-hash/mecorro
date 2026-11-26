@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../app/locator.dart';
 import '../app/theme.dart';
+import 'retro.dart';
 
-/// Menú flotante inferior: Actividad | Perfil | Historial.
+/// Menú flotante inferior (teclas biseladas): Actividad | Perfil | Historial.
 class FloatingNavBar extends StatelessWidget {
   const FloatingNavBar({super.key});
 
@@ -19,18 +20,8 @@ class FloatingNavBar extends StatelessWidget {
       valueListenable: ServiceLocator.tabIndex,
       builder: (context, index, _) {
         return Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.navy,
-            borderRadius: BorderRadius.circular(34),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.navy.withValues(alpha: 0.35),
-                blurRadius: 24,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.all(6),
+          decoration: RetroStyle.bevel(radius: 18),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -68,25 +59,39 @@ class _NavButton extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
-        padding: EdgeInsets.symmetric(horizontal: selected ? 18 : 14, vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: selected ? 16 : 14, vertical: 11),
         decoration: BoxDecoration(
           color: selected ? AppColors.orange : Colors.transparent,
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: selected ? AppColors.navy.withValues(alpha: 0.55) : Colors.transparent,
+            width: 1.4,
+          ),
+          boxShadow: selected
+              ? [
+            BoxShadow(
+              color: AppColors.navy.withValues(alpha: 0.35),
+              offset: const Offset(0, 2),
+              blurRadius: 0,
+            ),
+          ]
+              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(item.icon, size: 24, color: selected ? AppColors.white : AppColors.silver),
+            Icon(item.icon, size: 23, color: selected ? AppColors.white : AppColors.slate),
             if (selected) ...[
-              const SizedBox(width: 8),
+              const SizedBox(width: 7),
               Text(
-                item.label,
+                item.label.toUpperCase(),
                 style: const TextStyle(
                   color: AppColors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 12,
+                  letterSpacing: 0.8,
                 ),
               ),
             ],

@@ -9,6 +9,7 @@ import '../widgets/app_card.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/dialogs.dart';
 import '../widgets/password_strength_meter.dart';
+import '../widgets/retro.dart';
 import 'login_screen.dart';
 
 /// Estado del formulario. Como la pantalla es StatelessWidget, los controladores
@@ -33,6 +34,7 @@ class _RegisterForm {
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key}) : form = _RegisterForm();
 
+  // ignore: library_private_types_in_public_api
   final _RegisterForm form;
 
   static final List<TextInputFormatter> _decimalOnly = [
@@ -44,84 +46,82 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        child: Column(
-          children: [
-            const AuthHeader(
-              title: 'Crea tu cuenta',
-              subtitle:
-              'Con tus datos calculamos tus pasos, calorías e IMC con más precisión.',
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 22, 20, 32),
-              child: Form(
-                key: form.formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SectionTitle('Datos personales', icon: Icons.person_outline),
-                    AppCard(child: _personalFields()),
-                    const SizedBox(height: 18),
-                    const SectionTitle('Datos físicos', icon: Icons.monitor_weight_outlined),
-                    AppCard(child: _bodyFields()),
-                    const SizedBox(height: 18),
-                    const SectionTitle('Seguridad', icon: Icons.lock_outline),
-                    AppCard(child: _securityFields()),
-                    const SizedBox(height: 24),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: form.loading,
-                      builder: (context, loading, _) => ElevatedButton(
-                        style: AppDecor.primaryButton(),
-                        onPressed: loading ? null : () => _submit(context),
-                        child: loading
-                            ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            color: AppColors.white,
-                          ),
-                        )
-                            : const Text('Crear cuenta'),
-                      ),
+    return RetroPage(
+      title: 'mecorro / nuevo usuario',
+      child: Column(
+        children: [
+          const AuthHeader(
+            title: 'Crea tu cuenta',
+            subtitle:
+            'Con tus datos calculamos tus pasos, calorías e IMC con más precisión.',
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 22, 20, 32),
+            child: Form(
+              key: form.formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SectionTitle('Datos personales', icon: Icons.person_outline),
+                  AppCard(child: _personalFields()),
+                  const SizedBox(height: 18),
+                  const SectionTitle('Datos físicos', icon: Icons.monitor_weight_outlined),
+                  AppCard(child: _bodyFields()),
+                  const SizedBox(height: 18),
+                  const SectionTitle('Seguridad', icon: Icons.lock_outline),
+                  AppCard(child: _securityFields()),
+                  const SizedBox(height: 24),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: form.loading,
+                    builder: (context, loading, _) => ElevatedButton(
+                      style: AppDecor.primaryButton(),
+                      onPressed: loading ? null : () => _submit(context),
+                      child: loading
+                          ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: AppColors.white,
+                        ),
+                      )
+                          : const Text('Crear cuenta'),
                     ),
-                    const SizedBox(height: 14),
-                    Center(
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          const Text(
-                            '¿Ya tienes una cuenta?',
-                            style: TextStyle(color: AppColors.slate),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (_) => LoginScreen(
-                                  prefillEmail: ServiceLocator.session.lastUser?.email,
-                                ),
-                              ),
-                            ),
-                            child: const Text(
-                              'Iniciar sesión',
-                              style: TextStyle(
-                                color: AppColors.orange,
-                                fontWeight: FontWeight.w700,
+                  ),
+                  const SizedBox(height: 14),
+                  Center(
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        const Text(
+                          '¿Ya tienes una cuenta?',
+                          style: TextStyle(color: AppColors.slate),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (_) => LoginScreen(
+                                prefillEmail: ServiceLocator.session.lastUser?.email,
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                          child: const Text(
+                            'Iniciar sesión',
+                            style: TextStyle(
+                              color: AppColors.orange,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

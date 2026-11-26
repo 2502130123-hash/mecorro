@@ -12,6 +12,7 @@ import '../widgets/app_card.dart';
 import '../widgets/dialogs.dart';
 import '../widgets/metric_tile.dart';
 import '../widgets/mode_selector_bar.dart';
+import '../widgets/retro.dart';
 import '../widgets/route_map.dart';
 
 /// Sección 1 (la que se abre por defecto): selección de actividad + métricas en tiempo real.
@@ -124,16 +125,9 @@ class _ModePage extends StatelessWidget {
     final workout = ServiceLocator.workout;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Container(
+      child: LcdScreen(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(28),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.navy, AppColors.slate],
-          ),
-        ),
+        radius: 18,
         child: Stack(
           children: [
             Positioned(
@@ -387,13 +381,17 @@ class _WorkoutControls extends StatelessWidget {
                         'Tiempo',
                         style: TextStyle(color: AppColors.slate, fontSize: 13),
                       ),
-                      Text(
-                        Formatters.duration(w.elapsedSeconds),
-                        style: const TextStyle(
-                          fontSize: 34,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.navy,
-                          fontFeatures: [FontFeature.tabularFigures()],
+                      LcdScreen(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        radius: 8,
+                        child: Text(
+                          Formatters.duration(w.elapsedSeconds),
+                          style: const TextStyle(
+                            fontFamily: RetroStyle.mono,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.orange,
+                          ),
                         ),
                       ),
                     ],
@@ -524,9 +522,12 @@ class _RouteCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SectionTitle('Ruta en vivo', icon: Icons.map_outlined),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(22),
-          child: const SizedBox(height: 250, child: RouteMap()),
+        AppCard(
+          padding: const EdgeInsets.all(8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: const SizedBox(height: 250, child: RouteMap()),
+          ),
         ),
       ],
     );

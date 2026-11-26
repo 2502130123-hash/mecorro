@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../app/theme.dart';
+import 'retro.dart';
 
-/// Logo + nombre "mecorro" (esquina superior de la app).
+/// Tigre + nombre "mecorro" (esquina superior de la app).
 class BrandMark extends StatelessWidget {
   const BrandMark({super.key, this.onDark = false, this.size = 22});
 
@@ -15,10 +16,13 @@ class BrandMark extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: size * 1.5,
-          height: size * 1.5,
-          decoration: const BoxDecoration(color: AppColors.orange, shape: BoxShape.circle),
-          child: Icon(Icons.directions_run_rounded, color: AppColors.white, size: size),
+          padding: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.navy,
+            border: Border.all(color: AppColors.orange, width: 2),
+          ),
+          child: TigerImage(size: size * 1.4, circle: true),
         ),
         const SizedBox(width: 10),
         Text.rich(
@@ -34,6 +38,7 @@ class BrandMark extends StatelessWidget {
           style: TextStyle(
             fontSize: size,
             fontWeight: FontWeight.w800,
+            fontStyle: FontStyle.italic,
             letterSpacing: 0.4,
           ),
         ),

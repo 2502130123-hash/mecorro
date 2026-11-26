@@ -5,6 +5,7 @@ import '../app/theme.dart';
 import '../utils/validators.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/dialogs.dart';
+import '../widgets/retro.dart';
 import 'home_shell.dart';
 import 'register_screen.dart';
 
@@ -21,6 +22,7 @@ class _LoginForm {
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key, String? prefillEmail}) : form = _LoginForm(prefillEmail);
 
+  // ignore: library_private_types_in_public_api
   final _LoginForm form;
 
   @override
@@ -29,122 +31,120 @@ class LoginScreen extends StatelessWidget {
     final lastUser = session.lastUser;
     final showBiometric = session.canLoginWithBiometrics && lastUser != null;
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        child: Column(
-          children: [
-            const AuthHeader(
-              title: 'Bienvenido de nuevo',
-              subtitle: 'Inicia sesión para continuar con tu entrenamiento.',
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 28, 20, 32),
-              child: Form(
-                key: form.formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextFormField(
-                      controller: form.email,
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      autocorrect: false,
-                      decoration: AppDecor.input(
-                        label: 'Correo electrónico',
-                        icon: Icons.alternate_email_rounded,
-                      ),
-                      validator: Validators.email,
+    return RetroPage(
+      title: 'mecorro / acceso',
+      child: Column(
+        children: [
+          const AuthHeader(
+            title: 'Bienvenido de nuevo',
+            subtitle: 'Inicia sesión para continuar con tu entrenamiento.',
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 28, 20, 32),
+            child: Form(
+              key: form.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextFormField(
+                    controller: form.email,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    autocorrect: false,
+                    decoration: AppDecor.input(
+                      label: 'Correo electrónico',
+                      icon: Icons.alternate_email_rounded,
                     ),
-                    const SizedBox(height: 14),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: form.hidePassword,
-                      builder: (context, hidden, _) => TextFormField(
-                        controller: form.password,
-                        obscureText: hidden,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        textInputAction: TextInputAction.done,
-                        onFieldSubmitted: (_) => _submit(context),
-                        decoration: AppDecor.input(
-                          label: 'Contraseña',
-                          icon: Icons.lock_outline,
-                          suffix: IconButton(
-                            tooltip: hidden ? 'Mostrar contraseña' : 'Ocultar contraseña',
-                            icon: Icon(
-                              hidden
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                              color: AppColors.slate,
+                    validator: Validators.email,
+                  ),
+                  const SizedBox(height: 14),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: form.hidePassword,
+                    builder: (context, hidden, _) => TextFormField(
+                      controller: form.password,
+                      obscureText: hidden,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) => _submit(context),
+                      decoration: AppDecor.input(
+                        label: 'Contraseña',
+                        icon: Icons.lock_outline,
+                        suffix: IconButton(
+                          tooltip: hidden ? 'Mostrar contraseña' : 'Ocultar contraseña',
+                          icon: Icon(
+                            hidden
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: AppColors.slate,
+                          ),
+                          onPressed: () => form.hidePassword.value = !hidden,
+                        ),
+                      ),
+                      validator: Validators.loginPassword,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: form.loading,
+                    builder: (context, loading, _) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ElevatedButton(
+                          style: AppDecor.primaryButton(),
+                          onPressed: loading ? null : () => _submit(context),
+                          child: loading
+                              ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: AppColors.white,
                             ),
-                            onPressed: () => form.hidePassword.value = !hidden,
+                          )
+                              : const Text('Iniciar sesión'),
+                        ),
+                        if (showBiometric) ...[
+                          const SizedBox(height: 12),
+                          OutlinedButton.icon(
+                            style: AppDecor.outlineButton(),
+                            onPressed: loading ? null : () => _biometricLogin(context),
+                            icon: const Icon(Icons.fingerprint_rounded, size: 28),
+                            label: Text('Entrar con huella · ${lastUser.displayName}'),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Center(
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        const Text(
+                          '¿Aún no tienes cuenta?',
+                          style: TextStyle(color: AppColors.slate),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (_) => RegisterScreen()),
+                          ),
+                          child: const Text(
+                            'Regístrate',
+                            style: TextStyle(
+                              color: AppColors.orange,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                        validator: Validators.loginPassword,
-                      ),
+                      ],
                     ),
-                    const SizedBox(height: 24),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: form.loading,
-                      builder: (context, loading, _) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ElevatedButton(
-                            style: AppDecor.primaryButton(),
-                            onPressed: loading ? null : () => _submit(context),
-                            child: loading
-                                ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: AppColors.white,
-                              ),
-                            )
-                                : const Text('Iniciar sesión'),
-                          ),
-                          if (showBiometric) ...[
-                            const SizedBox(height: 12),
-                            OutlinedButton.icon(
-                              style: AppDecor.outlineButton(),
-                              onPressed: loading ? null : () => _biometricLogin(context),
-                              icon: const Icon(Icons.fingerprint_rounded, size: 28),
-                              label: Text('Entrar con huella · ${lastUser.displayName}'),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    Center(
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          const Text(
-                            '¿Aún no tienes cuenta?',
-                            style: TextStyle(color: AppColors.slate),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (_) => RegisterScreen()),
-                            ),
-                            child: const Text(
-                              'Regístrate',
-                              style: TextStyle(
-                                color: AppColors.orange,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

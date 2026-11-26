@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../app/theme.dart';
 import 'app_card.dart';
+import 'retro.dart';
 
-/// Tarjeta de métrica estilo S Health: icono, número grande de color y etiqueta.
+/// Métrica en una pantalla LCD: icono, número luminoso y etiqueta con LED.
 class MetricTile extends StatelessWidget {
   const MetricTile({
     super.key,
@@ -22,36 +23,77 @@ class MetricTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lcdColor = color == AppColors.orange ? AppColors.orange : AppColors.white;
     return AppCard(
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+      padding: const EdgeInsets.all(10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 26),
-          const SizedBox(height: 8),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text.rich(
-              TextSpan(
+          SizedBox(
+            width: double.infinity,
+            child: LcdScreen(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextSpan(
-                    text: value,
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700, color: color),
-                  ),
-                  if (unit.isNotEmpty)
-                    TextSpan(
-                      text: ' $unit',
-                      style: const TextStyle(fontSize: 14, color: AppColors.slate),
+                  Icon(icon, color: lcdColor, size: 20),
+                  const SizedBox(height: 4),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: value,
+                            style: TextStyle(
+                              fontFamily: RetroStyle.mono,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              color: lcdColor,
+                            ),
+                          ),
+                          if (unit.isNotEmpty)
+                            const TextSpan(text: ' '),
+                          if (unit.isNotEmpty)
+                            TextSpan(
+                              text: unit,
+                              style: const TextStyle(
+                                fontFamily: RetroStyle.mono,
+                                fontSize: 12,
+                                color: AppColors.silver,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
+                  ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 13, color: AppColors.slate),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LedDot(
+                color: lcdColor == AppColors.orange ? AppColors.orange : AppColors.slate,
+                size: 7,
+              ),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  label.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    letterSpacing: 0.8,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.slate,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
